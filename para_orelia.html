@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para mi princesa ❤️💞</title>
+
+<style>
+
+/* ====== FONDO GALAXIA EN MOVIMIENTO ====== */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white;
+    height: 100vh;
+
+    background: linear-gradient(45deg, #40e0d0, #9b59b6, #000000, #40e0d0);
+    background-size: 400% 400%;
+    animation: galaxyMove 20s ease infinite;
+}
+
+@keyframes galaxyMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ====== ESTRELLAS ====== */
+.stars {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate, drift 60s linear infinite;
+}
+
+@keyframes twinkle {
+    from { opacity: 0.3; }
+    to { opacity: 1; }
+}
+
+@keyframes drift {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-100vh); }
+}
+
+/* ====== CONTENIDO ====== */
+.container {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    top: 10%;
+    transition: opacity 0.5s ease;
+}
+
+h2 {
+    font-size: 26px;
+    color: #40e0d0;
+}
+
+h1 {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+/* ====== BOTONES ====== */
+button {
+    font-size: 18px;
+    padding: 12px 20px;
+    margin: 15px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#yes {
+    background-color: #40e0d0;
+    color: black;
+}
+
+#no {
+    background-color: #9b59b6;
+    color: white;
+    position: absolute;
+}
+
+#musicBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ffffff20;
+    color: white;
+    border: 1px solid white;
+}
+
+/* ====== EXPLOSIÓN ====== */
+.explosion {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #ffffff, #40e0d0, #9b59b6);
+    border-radius: 50%;
+    animation: boom 0.8s forwards;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+@keyframes boom {
+    from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    to { transform: translate(-50%, -50%) scale(50); opacity: 0; }
+}
+
+/* ====== CORAZONES ====== */
+.bigHeart {
+    position: fixed;
+    z-index: 3;
+    animation: floatUp 3s linear forwards;
+}
+
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-300px); opacity: 0; }
+}
+
+</style>
+</head>
+<body>
+
+<audio id="music" loop>
+    <source src="close-to-you.mp3" type="audio/mpeg">
+</audio>
+
+<div class="stars" id="stars"></div>
+
+<div class="container" id="mainContent">
+    <h2>Para mi princesa, Orelia 👑❤️</h2>
+
+    <h1>
+        Gracias por todo este tiempo que llevamos juntos mi amore 💗<br><br>
+        Estar contigo es de las mejores cosas que hay en mi vida 💕✨<br><br>
+        ¿Te gustaría ser mi San Valentín y compartir otro momento juntos?
+    </h1>
+
+    <button id="yes" onclick="respuestaSi()">Sí 💖</button>
+    <button id="no" ontouchstart="moverBoton()" onmouseover="moverBoton()">No 🥺</button>
+</div>
+
+<button id="musicBtn" onclick="toggleMusic()">🎵 Tocar música</button>
+
+<script>
+
+let yesSize = 1;
+let fadeInterval;
+
+/* ====== CREAR ESTRELLAS ====== */
+for (let i = 0; i < 150; i++) {
+    let star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * window.innerHeight + "px";
+    star.style.left = Math.random() * window.innerWidth + "px";
+    document.getElementById("stars").appendChild(star);
+}
+
+/* ====== BOTÓN NO HUYE Y SÍ CRECE ====== */
+function moverBoton() {
+    let x = Math.random() * (window.innerWidth - 100);
+    let y = Math.random() * (window.innerHeight - 50);
+    let boton = document.getElementById("no");
+    boton.style.left = x + "px";
+    boton.style.top = y + "px";
+
+    yesSize += 0.1;
+    document.getElementById("yes").style.transform = "scale(" + yesSize + ")";
+}
+
+/* ====== MÚSICA CON FADE-IN ====== */
+function toggleMusic() {
+    let music = document.getElementById("music");
+
+    if (music.paused) {
+        music.volume = 0.1;
+        music.play();
+        document.getElementById("musicBtn").innerText = "⏸ Pausar música";
+
+        fadeInterval = setInterval(() => {
+            if (music.volume < 0.95) {
+                music.volume += 0.02;
+            } else {
+                music.volume = 1;
+                clearInterval(fadeInterval);
+            }
+        }, 300);
+
+    } else {
+        music.pause();
+        document.getElementById("musicBtn").innerText = "🎵 Tocar música";
+        clearInterval(fadeInterval);
+    }
+}
+
+/* ====== CUANDO DICE QUE SÍ ====== */
+function respuestaSi() {
+
+    // Explosión
+    let explosion = document.createElement("div");
+    explosion.className = "explosion";
+    document.body.appendChild(explosion);
+    setTimeout(() => explosion.remove(), 800);
+
+    // Corazones gigantes
+    for (let i = 0; i < 150; i++) {
+        let heart = document.createElement("div");
+        heart.className = "bigHeart";
+        heart.innerHTML = "💖";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.top = Math.random() * window.innerHeight + "px";
+        heart.style.fontSize = (Math.random() * 40 + 60) + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+    }
+
+    // Mostrar mensaje final
+    setTimeout(() => {
+        document.getElementById("mainContent").innerHTML = `
+            <h1>Sabía que aceptarías 💕✨</h1>
+            <h2>Te amo mi reina ❤️👑<br>Gracias por estar en mi vida.</h2>
+        `;
+    }, 3000);
+}
+
+</script>
+
+</body>
+</html>
